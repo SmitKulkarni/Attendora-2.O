@@ -1,0 +1,60 @@
+services:
+  # 1. Frontend Web App (Nginx + React 18 SPA)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # 2. Backend SaaS API Service (Python Flask + Gunicorn)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - PORT=5000
+      - JWT_SECRET=attendora_prod_jwt_secret_change_me_in_production_2026
+      - JWT_EXPIRES_DAYS=7
+      - FRONTEND_URL=http://localhost:3000,http://127.0.0.1:3000
+      - COOKIE_SECURE=false
+      - RATE_LIMIT_WINDOW_SECONDS=300
+      - MAX_AUTH_REQUESTS_PER_WINDOW=15
+      - DATABASE_URL=postgresql://attendora_user:attendora_secret@postgres:5432/attendora_db
+      - REDIS_URL=redis://redis:6379/0
+      - INSTITUTION_ID=00000000-0000-0000-0000-000000000001
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  # 3. PostgreSQL Database with Multi-Tenant RLS Schema
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=attendora_user
+      - POSTGRES_PASSWORD=attendora_secret
+      - POSTGRES_DB=attendora_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/src/schema.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+
+  # 4. Redis Cache & Celery Task Message Broker
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+

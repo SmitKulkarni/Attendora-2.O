@@ -1,0 +1,20 @@
+{
+  "name": "attendora-backend",
+  "version": "3.1.0",
+  "description": "Attendora EdTech SaaS Backend API Service",
+  "main": "src/app.py",
+  "scripts": {
+    "start": "python src/app.py",
+    "dev": "python src/app.py",
+    "test": "python -m pytest tests"
+  },
+  "keywords": [
+    "attendora",
+    "saas",
+    "edtech",
+    "backend",
+    "flask"
+  ],
+  "author": "Attendora Engineering Team",
+  "license": "ISC"
+}

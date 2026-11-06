@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendora - Official Low Attendance Warning</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4fafe;
+            margin: 0;
+            padding: 24px;
+            color: #161c1f;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            background-color: #006673;
+            color: #ffffff;
+            padding: 24px 32px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0 0 6px 0;
+            font-size: 22px;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            margin: 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .badge-warning {
+            display: inline-block;
+            background-color: #feeceb;
+            color: #991b1b;
+            border: 1px solid #f87171;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+            margin: 20px 0 10px 0;
+        }
+        .content {
+            padding: 24px 32px;
+        }
+        .stat-card {
+            background-color: #feeceb;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            margin: 16px 0 24px 0;
+        }
+        .stat-val {
+            font-size: 36px;
+            font-weight: 800;
+            color: #dc2626;
+            margin: 4px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0 24px 0;
+            font-size: 14px;
+        }
+        th {
+            background-color: #f1f5f9;
+            text-align: left;
+            padding: 10px 12px;
+            color: #475569;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .risk {
+            color: #dc2626;
+            font-weight: 700;
+        }
+        .ok {
+            color: #16a34a;
+            font-weight: 600;
+        }
+        .footer {
+            background-color: #f8fafc;
+            padding: 20px 32px;
+            text-align: center;
+            font-size: 12px;
+            color: #64748b;
+            border-top: 1px solid #e2e8f0;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #006673;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-top: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ATTENDORA ACADEMIC MONITORING</h1>
+            <p>Office of the Dean & Academic Registry</p>
+        </div>
+        <div class="content">
+            <div style="text-align: center;">
+                <span class="badge-warning">CRITICAL ACADEMIC ATTENDANCE NOTICE</span>
+            </div>
+
+            <p>Dear <strong>{{ student_name }}</strong> (Roll No: <strong>{{ roll_no }}</strong>),</p>
+
+            <p>This automated official notification is issued because your cumulative class attendance has fallen below the institutional regulatory threshold of <strong>{{ threshold }}%</strong>.</p>
+
+            <div class="stat-card">
+                <div style="font-size: 13px; color: #7f1d1d; font-weight: 600;">YOUR CURRENT OVERALL ATTENDANCE</div>
+                <div class="stat-val">{{ overall_percentage }}%</div>
+                <div style="font-size: 12px; color: #991b1b;">Disqualification threshold: &lt; {{ threshold }}%</div>
+            </div>
+
+            <h3>Subject Attendance Summary</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject Name</th>
+                        <th>Attended / Total</th>
+                        <th>Percentage</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for subj in subjects %}
+                    <tr>
+                        <td><strong>{{ subj.name }}</strong> ({{ subj.code }})</td>
+                        <td>{{ subj.attended }} / {{ subj.total }}</td>
+                        <td class="{{ 'risk' if subj.percentage < threshold else 'ok' }}">{{ subj.percentage }}%</td>
+                        <td class="{{ 'risk' if subj.percentage < threshold else 'ok' }}">
+                            {{ 'DEFICIENT' if subj.percentage < threshold else 'SATISFACTORY' }}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p style="font-size: 13px; color: #475569; line-height: 1.5;">
+                Under university statutory regulations, candidates maintaining below {{ threshold }}% attendance are liable for examination barring. Please schedule an urgent counseling session with your Faculty Mentor immediately.
+            </p>
+
+            <div style="text-align: center; margin: 24px 0 8px 0;">
+                <a href="{{ portal_url }}" class="btn">View Attendance & Apply for Leave</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Attendora EdTech Platform • Automated Academic Compliance System</p>
+            <p>Sent to {{ student_email }} • Document ID: {{ notice_id }}</p>
+        </div>
+    </div>
+</body>
+</html>
+

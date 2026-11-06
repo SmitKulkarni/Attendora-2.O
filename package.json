@@ -1,0 +1,26 @@
+{
+  "name": "attendora-root",
+  "version": "3.1.0",
+  "private": true,
+  "description": "Attendora EdTech SaaS Platform - Root Workspace",
+  "scripts": {
+    "install:frontend": "npm --prefix frontend install",
+    "install:backend": "cd backend && pip install -r requirements.txt",
+    "install:all": "npm run install:frontend && npm run install:backend",
+    "start:frontend": "npm --prefix frontend start",
+    "start:backend": "npm --prefix backend start",
+    "build:frontend": "npm --prefix frontend run build",
+    "test:backend": "npm --prefix backend test",
+    "test": "npm run test:backend"
+  },
+  "keywords": [
+    "attendora",
+    "edtech",
+    "saas",
+    "attendance",
+    "gemini-ai"
+  ],
+  "author": "Attendora Engineering Team",
+  "license": "ISC"
+}
+
